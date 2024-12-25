@@ -4,19 +4,49 @@ import React, { useEffect, useState } from "react";
 const FlightSearch = () => {
   const [leavingFrom, setLeavingFrom] = useState("");
   const [leavingSuggestions, setLeavingSuggestions] = useState([]);
+  const [selectedLeavingFrom, setSelectedLeavingFrom] = useState("");
+
   const [to, setTo] = useState("");
   const [toSuggestions, setToSuggestions] = useState([]);
+  const [selectedTo, setSelectedTo] = useState("");
+
   const [departureDate, setDepartureDate] = useState("");
   const [passengers, setPassengers] = useState(1);
   const [classType, setClassType] = useState("Economy");
   const [searchResults, setSearchResults] = useState([]);
 
   // Fetch airport autosuggestions
+  const options = {
+    method: 'GET',
+    url: 'https://api.innotraveltech.com/tools/airport-autosuggetion-data',
+    
+    headers: {
+        "apikey": "S10944771678913327924",
+        "secretecode": "dxbz4eCVjJ5U6TevfIUqMVD1LbMG3eWfLdJ14qjQZRy5j",
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    },
+
+  }
+
+  const options2 = {
+    method: 'POST',
+    url: 'https://api.innotraveltech.com/flight/search',
+    
+    headers: {
+        "apikey": "S10944771678913327924",
+        "secretecode": "dxbz4eCVjJ5U6TevfIUqMVD1LbMG3eWfLdJ14qjQZRy5j",
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    },
+
+  }
   const fetchAirportSuggestions = async (query, setSuggestions) => {
     try {
-      const response = await axios.get(
-        `https://api.innotraveltech.com/tools/airport-autosuggetion-data?query=${query}`
-      );
+
+      const response = await axios.request(options);
+console.log(response.data);
+
       setSuggestions(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching airport data:", error);
@@ -26,17 +56,24 @@ const FlightSearch = () => {
 
   // Handle flight search
   const handleSearch = async () => {
+    const from = selectedLeavingFrom || "ANY";
+    const destination = selectedTo || "ANY";
+    const date = departureDate || new Date().toISOString().split("T")[0];
+    const pax = passengers || 1;
+    const travelClass = classType || "Economy";
+
     try {
-      const response = await axios.post("https://api.innotraveltech.com/flight/search", {
-        from: leavingFrom,
-        to,
-        departureDate,
-        passengers,
-        classType,
-      });
-      setSearchResults(response.data.flights || []);
+      const response = await axios.request(options2);
+
+      if (response.data && response.data.flights) {
+        setSearchResults(response.data.flights);
+      } else {
+        setSearchResults([]);
+        alert("No flights found. Please try with different inputs.");
+      }
     } catch (error) {
       console.error("Error fetching flight search data:", error);
+      alert("An error occurred while searching for flights. Please try again.");
     }
   };
 
@@ -46,6 +83,10 @@ const FlightSearch = () => {
       fetchAirportSuggestions(leavingFrom, setLeavingSuggestions);
     }
   }, [leavingFrom]);
+
+  useEffect(() => {
+    axios()
+  })
 
   // Update destination suggestions
   useEffect(() => {
@@ -58,26 +99,32 @@ const FlightSearch = () => {
     <div
       className="min-h-screen flex items-center justify-center mt-6 mb-6"
       style={{
-        backgroundImage: "url('https://i.postimg.cc/wv7SBLrq/alev-takil-Tu-Fsbn5gedo-unsplash.jpg')",
+        backgroundImage:
+          "url('https://i.postimg.cc/wv7SBLrq/alev-takil-Tu-Fsbn5gedo-unsplash.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       <div className="bg-white p-6 shadow rounded-md w-full max-w-4xl">
-        {/* Flight Type Buttons */}
         <div className="flex justify-between items-center mb-4">
           <button className="py-2 px-4 font-medium border-b-2 border-red-600 text-red-600">
             One Way
           </button>
-          <button className="py-2 px-4 font-medium text-gray-500">Round Trip</button>
-          <button className="py-2 px-4 font-medium text-gray-500">Multi-city</button>
+          <button className="py-2 px-4 font-medium text-gray-500">
+            Round Trip
+          </button>
+          <button className="py-2 px-4 font-medium text-gray-500">
+            Multi-city
+          </button>
         </div>
 
         {/* Input Fields */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           {/* Leaving From */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Leaving From</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Leaving From
+            </label>
             <input
               type="text"
               className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
@@ -86,22 +133,27 @@ const FlightSearch = () => {
               onChange={(e) => setLeavingFrom(e.target.value)}
             />
             <ul className="bg-white shadow-md rounded-md mt-1">
-              {Array.isArray(leavingSuggestions) &&
-                leavingSuggestions.map((airport, index) => (
-                  <li
-                    key={index}
-                    className="p-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => setLeavingFrom(airport.name)} // Replace 'airport.name' with the correct property name
-                  >
-                    {airport.name}
-                  </li>
-                ))}
+              {leavingSuggestions.map((airport, index) => (
+                <li
+                  key={index}
+                  className="p-2 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => {
+                    setSelectedLeavingFrom(airport.code);
+                    setLeavingFrom(airport.name);
+                    setLeavingSuggestions([]);
+                  }}
+                >
+                  {airport.name} ({airport.code})
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Going To */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Going To</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Going To
+            </label>
             <input
               type="text"
               className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
@@ -110,22 +162,27 @@ const FlightSearch = () => {
               onChange={(e) => setTo(e.target.value)}
             />
             <ul className="bg-white shadow-md rounded-md mt-1">
-              {Array.isArray(toSuggestions) &&
-                toSuggestions.map((airport, index) => (
-                  <li
-                    key={index}
-                    className="p-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => setTo(airport.name)}
-                  >
-                    {airport.name}
-                  </li>
-                ))}
+              {toSuggestions.map((airport, index) => (
+                <li
+                  key={index}
+                  className="p-2 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => {
+                    setSelectedTo(airport.code);
+                    setTo(airport.name);
+                    setToSuggestions([]);
+                  }}
+                >
+                  {airport.name} ({airport.code})
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Departure Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Departure Date</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Departure Date
+            </label>
             <input
               type="date"
               className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
@@ -168,7 +225,8 @@ const FlightSearch = () => {
             <ul>
               {searchResults.map((flight, index) => (
                 <li key={index} className="p-2 border-b border-gray-300">
-                  {flight.details} {/* Replace with actual API response structure */}
+                  {flight.details}{" "}
+                  {/* Replace with actual API response structure */}
                 </li>
               ))}
             </ul>

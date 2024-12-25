@@ -36,9 +36,9 @@ const Footer = () => {
             {/* Contact Section */}
             <div className="space-y-4">
               <h2 className="text-lg font-bold">Contact Us</h2>
-              <p>www.bookify06@gmail.com</p>
+            
               <p>Dhaka, Bangladesh</p>
-              <p>+8802-8123456</p>
+              <p>+8801861818242</p>
               <div className="flex space-x-4 mt-4 text-xl items-center justify-center">
                 <a href="#" aria-label="Facebook">
                   <FaFacebook />
@@ -71,12 +71,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <a href="#" className="hover:underline">
-                    Banners & Noble, Inc.
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Authors
+                    Blog
                   </a>
                 </li>
               </ul>
@@ -101,11 +96,7 @@ const Footer = () => {
                     Order Form
                   </a>
                 </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Blog
-                  </a>
-                </li>
+                
               </ul>
             </div>
 
@@ -141,7 +132,7 @@ const Footer = () => {
             <p className="lg:text-center ml-10 md:text-center">
               © Copyright The Readers. All rights reserved. Site by{" "}
               <span className="font-bold" href="#">
-                Bookify
+                Fly High
               </span>
               .
             </p>
