@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const FlightSearch = () => {
-  const [tripType, setTripType] = useState("One Way"); // New state for trip type
+  const [tripType, setTripType] = useState("One Way");
   const [leavingFrom, setLeavingFrom] = useState("");
   const [leavingSuggestions, setLeavingSuggestions] = useState([]);
   const [selectedLeavingFrom, setSelectedLeavingFrom] = useState("");
@@ -12,9 +12,9 @@ const FlightSearch = () => {
   const [selectedTo, setSelectedTo] = useState("");
 
   const [departureDate, setDepartureDate] = useState("");
-  const [returnDate, setReturnDate] = useState(""); // New state for round trip
+  const [returnDate, setReturnDate] = useState("");
   const [passengers, setPassengers] = useState(1);
-  const [classType, setClassType] = useState("Business"); // Default to Business
+  const [classType, setClassType] = useState("Business");
   const [searchResults, setSearchResults] = useState([]);
 
   // Fetch airport autosuggestions
@@ -90,7 +90,7 @@ const FlightSearch = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center mt-6 mb-6"
+      className="min-h-screen flex items-center justify-center mt-2 mb-2"
       style={{
         backgroundImage:
           "url('https://i.postimg.cc/wv7SBLrq/alev-takil-Tu-Fsbn5gedo-unsplash.jpg')",
@@ -103,7 +103,9 @@ const FlightSearch = () => {
         <div className="flex justify-between items-center mb-4">
           <button
             className={`py-2 px-4 font-medium ${
-              tripType === "One Way" ? "border-b-2 border-red-600 text-red-600" : "text-gray-500"
+              tripType === "One Way"
+                ? "border-b-2 border-red-600 text-red-600"
+                : "text-gray-500"
             }`}
             onClick={() => setTripType("One Way")}
           >
@@ -111,7 +113,9 @@ const FlightSearch = () => {
           </button>
           <button
             className={`py-2 px-4 font-medium ${
-              tripType === "Round Trip" ? "border-b-2 border-red-600 text-red-600" : "text-gray-500"
+              tripType === "Round Trip"
+                ? "border-b-2 border-red-600 text-red-600"
+                : "text-gray-500"
             }`}
             onClick={() => setTripType("Round Trip")}
           >
@@ -119,7 +123,9 @@ const FlightSearch = () => {
           </button>
           <button
             className={`py-2 px-4 font-medium ${
-              tripType === "Multi-city" ? "border-b-2 border-red-600 text-red-600" : "text-gray-500"
+              tripType === "Multi-city"
+                ? "border-b-2 border-red-600 text-red-600"
+                : "text-gray-500"
             }`}
             onClick={() => setTripType("Multi-city")}
           >
@@ -251,7 +257,8 @@ const FlightSearch = () => {
             <ul>
               {searchResults.map((flight, index) => (
                 <li key={index} className="p-2 border-b border-gray-300">
-                  {flight.details} {/* Replace with actual API response structure */}
+                  {flight.details}{" "}
+                  
                 </li>
               ))}
             </ul>

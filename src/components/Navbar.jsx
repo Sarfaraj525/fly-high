@@ -12,7 +12,8 @@ const Navbar = () => {
                 className="h-5 w-5"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -23,7 +24,8 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-gray-800 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+              className="menu menu-sm dropdown-content bg-gray-800 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            >
               <li>
                 <a>About us</a>
               </li>
@@ -51,7 +53,9 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <a className="btn bg-gray-600 text-white hover:bg-gray-500 border-none">Sign in</a>
+          <a className="btn bg-gray-600 text-white hover:bg-gray-500 border-none">
+            Sign in
+          </a>
         </div>
       </div>
     </div>

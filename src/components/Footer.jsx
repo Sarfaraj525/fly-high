@@ -36,7 +36,7 @@ const Footer = () => {
             {/* Contact Section */}
             <div className="space-y-4">
               <h2 className="text-lg font-bold">Contact Us</h2>
-            
+
               <p>Dhaka, Bangladesh</p>
               <p>+8801861818242</p>
               <div className="flex space-x-4 mt-4 text-xl items-center justify-center">
@@ -96,7 +96,6 @@ const Footer = () => {
                     Order Form
                   </a>
                 </li>
-                
               </ul>
             </div>
 

@@ -3,10 +3,9 @@ import React, { useState, useEffect } from "react";
 const Banner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const bannerImages = [
-      "https://i.postimg.cc/NMhVys0r/flight2.jpg",
+    "https://i.postimg.cc/NMhVys0r/flight2.jpg",
     "https://i.postimg.cc/wTdqKzcM/flight1.jpg",
     "https://i.postimg.cc/76gR0FCt/flight3.jpg",
-    
   ];
 
   const nextSlide = () => {
@@ -14,13 +13,15 @@ const Banner = () => {
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + bannerImages.length) % bannerImages.length);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + bannerImages.length) % bannerImages.length
+    );
   };
 
   // Auto-slide every 3 seconds
   useEffect(() => {
     const interval = setInterval(nextSlide, 3000);
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -48,7 +49,7 @@ const Banner = () => {
         <img
           src={bannerImages[currentIndex]}
           alt="Banner"
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover"
         />
       </div>
 
