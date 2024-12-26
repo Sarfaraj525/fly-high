@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const FlightSearch = () => {
+  const [tripType, setTripType] = useState("One Way"); // New state for trip type
   const [leavingFrom, setLeavingFrom] = useState("");
   const [leavingSuggestions, setLeavingSuggestions] = useState([]);
   const [selectedLeavingFrom, setSelectedLeavingFrom] = useState("");
@@ -11,42 +12,37 @@ const FlightSearch = () => {
   const [selectedTo, setSelectedTo] = useState("");
 
   const [departureDate, setDepartureDate] = useState("");
+  const [returnDate, setReturnDate] = useState(""); // New state for round trip
   const [passengers, setPassengers] = useState(1);
-  const [classType, setClassType] = useState("Economy");
+  const [classType, setClassType] = useState("Business"); // Default to Business
   const [searchResults, setSearchResults] = useState([]);
 
   // Fetch airport autosuggestions
   const options = {
-    method: 'GET',
-    url: 'https://api.innotraveltech.com/tools/airport-autosuggetion-data',
-    
+    method: "GET",
+    url: "https://api.innotraveltech.com/tools/airport-autosuggetion-data",
     headers: {
-        "apikey": "S10944771678913327924",
-        "secretecode": "dxbz4eCVjJ5U6TevfIUqMVD1LbMG3eWfLdJ14qjQZRy5j",
-        "Accept": "application/json",
-        "Content-Type": "application/json"
+      apikey: "S10944771678913327924",
+      secretecode: "dxbz4eCVjJ5U6TevfIUqMVD1LbMG3eWfLdJ14qjQZRy5j",
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-
-  }
+  };
 
   const options2 = {
-    method: 'POST',
-    url: 'https://api.innotraveltech.com/flight/search',
-    
+    method: "POST",
+    url: "https://api.innotraveltech.com/flight/search",
     headers: {
-        "apikey": "S10944771678913327924",
-        "secretecode": "dxbz4eCVjJ5U6TevfIUqMVD1LbMG3eWfLdJ14qjQZRy5j",
-        "Accept": "application/json",
-        "Content-Type": "application/json"
+      apikey: "S10944771678913327924",
+      secretecode: "dxbz4eCVjJ5U6TevfIUqMVD1LbMG3eWfLdJ14qjQZRy5j",
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
+  };
 
-  }
   const fetchAirportSuggestions = async (query, setSuggestions) => {
     try {
-
       const response = await axios.request(options);
-console.log(response.data);
-
       setSuggestions(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching airport data:", error);
@@ -59,8 +55,9 @@ console.log(response.data);
     const from = selectedLeavingFrom || "ANY";
     const destination = selectedTo || "ANY";
     const date = departureDate || new Date().toISOString().split("T")[0];
+    const returnTripDate = tripType === "Round Trip" ? returnDate : null;
     const pax = passengers || 1;
-    const travelClass = classType || "Economy";
+    const travelClass = classType || "Business";
 
     try {
       const response = await axios.request(options2);
@@ -84,10 +81,6 @@ console.log(response.data);
     }
   }, [leavingFrom]);
 
-  useEffect(() => {
-    axios()
-  })
-
   // Update destination suggestions
   useEffect(() => {
     if (to) {
@@ -106,14 +99,30 @@ console.log(response.data);
       }}
     >
       <div className="bg-white p-6 shadow rounded-md w-full max-w-4xl">
+        {/* Trip Type Selector */}
         <div className="flex justify-between items-center mb-4">
-          <button className="py-2 px-4 font-medium border-b-2 border-red-600 text-red-600">
+          <button
+            className={`py-2 px-4 font-medium ${
+              tripType === "One Way" ? "border-b-2 border-red-600 text-red-600" : "text-gray-500"
+            }`}
+            onClick={() => setTripType("One Way")}
+          >
             One Way
           </button>
-          <button className="py-2 px-4 font-medium text-gray-500">
+          <button
+            className={`py-2 px-4 font-medium ${
+              tripType === "Round Trip" ? "border-b-2 border-red-600 text-red-600" : "text-gray-500"
+            }`}
+            onClick={() => setTripType("Round Trip")}
+          >
             Round Trip
           </button>
-          <button className="py-2 px-4 font-medium text-gray-500">
+          <button
+            className={`py-2 px-4 font-medium ${
+              tripType === "Multi-city" ? "border-b-2 border-red-600 text-red-600" : "text-gray-500"
+            }`}
+            onClick={() => setTripType("Multi-city")}
+          >
             Multi-city
           </button>
         </div>
@@ -190,6 +199,21 @@ console.log(response.data);
               onChange={(e) => setDepartureDate(e.target.value)}
             />
           </div>
+
+          {/* Return Date for Round Trip */}
+          {tripType === "Round Trip" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Return Date
+              </label>
+              <input
+                type="date"
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+                value={returnDate}
+                onChange={(e) => setReturnDate(e.target.value)}
+              />
+            </div>
+          )}
         </div>
 
         {/* Passengers and Class */}
@@ -202,7 +226,9 @@ console.log(response.data);
           </button>
           <button
             className="py-2 px-4 border border-gray-300 rounded-md"
-            onClick={() => setClassType("Economy")}
+            onClick={() =>
+              setClassType(classType === "Business" ? "Economy" : "Business")
+            }
           >
             {classType}
           </button>
@@ -225,8 +251,7 @@ console.log(response.data);
             <ul>
               {searchResults.map((flight, index) => (
                 <li key={index} className="p-2 border-b border-gray-300">
-                  {flight.details}{" "}
-                  {/* Replace with actual API response structure */}
+                  {flight.details} {/* Replace with actual API response structure */}
                 </li>
               ))}
             </ul>
